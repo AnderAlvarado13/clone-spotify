@@ -7,9 +7,9 @@
     if(currentHour < 12){
         greeting = "Buenos dias"
     }else if(currentHour < 18){
-        greeting = "Buenos tardes"
+        greeting = "Buenas tardes"
     }else{
-        greeting = "Buenos noches"
+        greeting = "Buenas noches"
     }
 </script>
 

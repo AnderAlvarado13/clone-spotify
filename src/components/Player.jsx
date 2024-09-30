@@ -33,8 +33,25 @@ const CurrentSong = ({ image, title, artists }) => {
     )
 } 
 
+const VolumenControl = () => {
+    const volume = usePlayerstore(state => state.volume)
+    const setVolume = usePlayerstore(state => state.setVolume)
+
+    return (
+        <div className="flex justify-center gap-x-2 ">
+            {volume < 0.1 ? <VolumeSilence /> : <Volume />}
+            <Slider defaultValue={[100]} max={100} min={0} className="w-[95px]" onValueChange={(value) => {
+            const [newVolume] = value
+            const volumeValue = newVolume / 100
+            setVolume(volumeValue)
+            }}/>
+         </div>
+        
+    )
+}
+
 export function Player(){
-    const { currentMusic, isPlaying, setIsPlaying } = usePlayerstore(state => state)
+    const { currentMusic, isPlaying, setIsPlaying, volume } = usePlayerstore(state => state)
     const audioRef = useRef()
     const volumeRef = useRef(1)
 
@@ -44,12 +61,17 @@ export function Player(){
             : audioRef.current.pause(1)
     }, [isPlaying])
 
+
+    useEffect(() => {
+        audioRef.current.volume = volume
+    }, [volume])
+    
     useEffect(() =>{
         const {song, playlist, songs} = currentMusic
         if(song){
             const src = `/music/${playlist?.id}/0${song.id}.mp3`
             audioRef.current.src = src
-            audioRef.current.volume = volumeRef.current
+            audioRef.current.volume = volume
             audioRef.current.play()
         }
     }, [currentMusic])
@@ -73,11 +95,7 @@ export function Player(){
             </div>
 
             <div className="grid place-content-center">
-                <Slider defaultValue={[100]} max={100} min={0} className="w-[95px]" onValueChange={(value) => {
-                    const [newVolume] = value
-                    const volumeValue = newVolume / 100
-                    volumeRef.current = volumeValue
-                    audioRef.current.volume = volumeValue}}/>
+                <VolumenControl />
             </div>
             
         </div>

@@ -1,7 +1,7 @@
 import { Pause, Play } from "./Player";
 import { usePlayerstore } from "@/store/playerStore"
 
-export function CardPlayButton ({id}){
+export function CardPlayButton ({id, size = 'small'}) {
     const { currentMusic, isPlaying, setIsPlaying, setCurrentMusic } = usePlayerstore(state => state)
     const isPlayingPlayList = isPlaying && currentMusic?.playlist.id === id 
     const handleClick = () => {
@@ -19,11 +19,11 @@ export function CardPlayButton ({id}){
         })
     }
     
-    
+    const iconClassName = size === 'small' ? 'w-4 h-4' : 'w-5 h-5'
 
     return(
-        <button onClick={handleClick} className="card-play-button rounded-full bg-green-500 p-4">
-            {isPlayingPlayList ? <Pause /> : <Play />}
+        <button onClick={handleClick} className="card-play-button rounded-full bg-green-500 p-4 hover:scale-105 transition hover:bg-green-400">
+            {isPlayingPlayList ? <Pause classNama={iconClassName} /> : <Play classNama={iconClassName} />}
         </button>
     )
 }
